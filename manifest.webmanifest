@@ -1,0 +1,11 @@
+{
+  "name": "My School Hub",
+  "short_name": "School Hub",
+  "description": "School notes, homework, photos and family calendar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#2457c5",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

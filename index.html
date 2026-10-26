@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2457c5">
+<link rel="manifest" href="manifest.webmanifest">
+<title>My School Hub</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#182235;background:#f3f6fb}
+*{box-sizing:border-box}body{margin:0}header{background:#2457c5;color:#fff;padding:20px 16px 16px}header h1{margin:0;font-size:1.45rem}header p{margin:6px 0 0;opacity:.9;font-size:.93rem}
+main{max-width:760px;margin:auto;padding:14px}.profiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.profile{border:1px solid #d7dfed;background:#fff;border-radius:12px;padding:11px 5px;text-align:center;font-weight:700;color:#26354d}
+.profile.active{background:#e5edff;border-color:#2457c5;color:#1744a5}
+nav{display:flex;gap:7px;overflow:auto;margin-bottom:12px}
+nav button,.btn{border:0;border-radius:10px;padding:10px 12px;background:#2457c5;color:white;font-weight:650;font-size:.92rem}
+nav button{background:#e2e8f3;color:#24334b;white-space:nowrap}nav button.active{background:#2457c5;color:#fff}
+.card{background:#fff;border:1px solid #e0e6f0;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 7px #162b4a0a}
+h2{font-size:1.08rem;margin:0 0 12px}label{display:block;font-size:.9rem;font-weight:650;margin:10px 0 5px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #cbd5e4;border-radius:9px;font:inherit;background:#fff;color:#182235}
+textarea{min-height:90px;resize:vertical}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+.btn.secondary{background:#e7edf7;color:#26354d}.btn.danger{background:#b42318}.btn.small{padding:7px 9px;font-size:.85rem}
+.item-title{font-weight:750;font-size:1rem}.meta{font-size:.82rem;color:#5a6780;margin:5px 0 9px}.details{white-space:pre-wrap;overflow-wrap:anywhere}
+.item-photo{display:block;max-width:100%;max-height:240px;border-radius:9px;margin-top:10px}
+.empty{color:#64748b;text-align:center;padding:22px 8px}.hint{font-size:.83rem;color:#53627a;line-height:1.45}
+#status{font-size:.9rem;color:#1744a5;margin:8px 0}.hide{display:none!important}
+footer{font-size:.8rem;color:#64748b;text-align:center;padding:12px 0 28px}
+</style>
+</head>
+<body>
+<header><h1>My School Hub</h1><p>School notes, homework, photos and family dates — stored on this phone.</p></header>
+<main>
+  <div class="profiles" id="profiles">
+    <button class="profile active" data-child="Jansen">Jansen</button>
+    <button class="profile" data-child="Jaylen">Jaylen</button>
+    <button class="profile" data-child="Jarrel">Jarrel</button>
+  </div>
+  <nav>
+    <button class="active" data-tab="records">Notes & homework</button>
+    <button data-tab="calendar">Family calendar</button>
+    <button data-tab="backup">Backup & restore</button>
+  </nav>
+  <section id="records">
+    <div class="card">
+      <h2 id="formHeading">Add a school record</h2>
+      <form id="recordForm">
+        <input type="hidden" id="editId">
+        <label for="type">Record type</label>
+        <select id="type">
+          <option>School notice</option><option>Homework</option><option>Exam / test</option><option>School event</option><option>Teacher message</option><option>Other note</option>
+        </select>
+        <label for="title">Title</label><input id="title" required maxlength="120" placeholder="e.g. Maths homework">
+        <label for="details">Notes / details</label><textarea id="details" placeholder="Instructions, pages to complete, things to bring…"></textarea>
+        <div class="row">
+          <div><label for="date">Due date / event date</label><input id="date" type="date"></div>
+          <div><label for="statusSelect">Status</label><select id="statusSelect"><option>To do</option><option>In progress</option><option>Done</option></select></div>
+        </div>
+        <label for="photo">Attach a photo (optional)</label><input id="photo" type="file" accept="image/*" capture="environment">
+        <p class="hint">Photos and notes are saved in this browser on this phone. Avoid clearing browser data. Export a backup regularly.</p>
+        <div class="row"><button class="btn" type="submit">Save record</button><button class="btn secondary" type="button" id="cancelEdit">Cancel edit</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Saved records</h2>
+      <label for="search">Search records</label><input id="search" placeholder="Search titles and notes">
+      <div class="row" style="margin-top:8px"><select id="filterType"><option value="">All types</option><option>School notice</option><option>Homework</option><option>Exam / test</option><option>School event</option><option>Teacher message</option><option>Other note</option></select><select id="filterStatus"><option value="">All statuses</option><option>To do</option><option>In progress</option><option>Done</option></select></div>
+      <div id="recordsList"></div>
+    </div>
+  </section>
+  <section id="calendar" class="hide">
+    <div class="card">
+      <h2>Add a family date</h2>
+      <form id="eventForm">
+        <label for="eventTitle">Event title</label><input id="eventTitle" required placeholder="e.g. Parent-teacher meeting">
+        <label for="eventDate">Date</label><input id="eventDate" type="date" required>
+        <label for="eventChild">For</label><select id="eventChild"><option>Whole family</option><option>Jansen</option><option>Jaylen</option><option>Jarrel</option></select>
+        <label for="eventDetails">Details</label><textarea id="eventDetails" placeholder="Time, venue, what to bring…"></textarea>
+        <button class="btn" type="submit">Save family date</button>
+      </form>
+    </div>
+    <div class="card"><h2>Upcoming dates</h2><div id="eventsList"></div></div>
+  </section>
+  <section id="backup" class="hide">
+    <div class="card">
+      <h2>Protect your records</h2>
+      <p class="hint">Your information stays in this browser on this phone; it is not automatically synced to another device. Export a backup after adding important notes or photos.</p>
+      <div class="row"><button class="btn" id="exportBtn" type="button">Export backup</button><button class="btn secondary" id="importBtn" type="button">Import backup</button></div>
+      <input class="hide" id="importFile" type="file" accept="application/json">
+      <p id="backupStatus" class="hint"></p>
+    </div>
+  </section>
+  <div id="status" role="status"></div>
+  <footer>My School Hub · Local phone storage · Keep backups safe</footer>
+</main>
+<script>
+const KEY='mySchoolHubFreshV1';
+let state={records:[],events:[]}, child='Jansen', activeTab='records';
+const $=id=>document.getElementById(id);
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.records)&&Array.isArray(x.events))state=x;}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));$('status').textContent='Saved on this phone.';}catch(e){$('status').textContent='Storage is full. Export a backup and remove large photos.';}}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function dateText(d){if(!d)return 'No date';return new Date(d+'T12:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});}
+function setChild(n){child=n;document.querySelectorAll('.profile').forEach(b=>b.classList.toggle('active',b.dataset.child===n));renderRecords();}
+document.querySelectorAll('.profile').forEach(b=>b.addEventListener('click',()=>setChild(b.dataset.child)));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['records','calendar','backup'].forEach(id=>$(id).classList.toggle('hide',id!==activeTab));if(activeTab==='calendar')renderEvents();}));
+function resetForm(){ $('recordForm').reset();$('editId').value='';$('formHeading').textContent='Add a school record';$('cancelEdit').classList.remove('hide');}
+$('cancelEdit').addEventListener('click',resetForm);
+$('recordForm').addEventListener('submit',async e=>{e.preventDefault();let id=$('editId').value;let old=state.records.find(r=>r.id===id);let photo=old?.photo||'';const f=$('photo').files[0];if(f){if(f.size>4*1024*1024){alert('Please choose a photo under 4 MB to help save phone storage.');return;}photo=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
+const rec={id:id||String(Date.now())+'-'+Math.random().toString(36).slice(2),child,type:$('type').value,title:$('title').value.trim(),details:$('details').value,date:$('date').value,status:$('statusSelect').value,photo,updatedAt:new Date().toISOString()};
+if(id)state.records=state.records.map(r=>r.id===id?rec:r);else state.records.push(rec);save();resetForm();renderRecords();});
+function editRecord(id){const r=state.records.find(x=>x.id===id);if(!r)return;setChild(r.child);$('editId').value=r.id;$('type').value=r.type;$('title').value=r.title;$('details').value=r.details;$('date').value=r.date;$('statusSelect').value=r.status;$('formHeading').textContent='Edit school record';window.scrollTo({top:0,behavior:'smooth'});}
+function deleteRecord(id){if(!confirm('Delete this record and its attached photo?'))return;state.records=state.records.filter(r=>r.id!==id);save();renderRecords();}
+function renderRecords(){let q=$('search').value.toLowerCase(),typ=$('filterType').value,st=$('filterStatus').value;let a=state.records.filter(r=>r.child===child&&(!q||(r.title+' '+r.details+' '+r.type).toLowerCase().includes(q))&&(!typ||r.type===typ)&&(!st||r.status===st)).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));$('recordsList').innerHTML=a.length?a.map(r=>`<article class="card"><div class="item-title">${esc(r.title)}</div><div class="meta">${esc(r.child)} · ${esc(r.type)} · ${dateText(r.date)} · ${esc(r.status)}</div><div class="details">${esc(r.details)}</div>${r.photo?`<img class="item-photo" src="${r.photo}" alt="Attached school photo">`:''}<div class="row" style="margin-top:10px"><button class="btn small" onclick="editRecord('${r.id}')">Edit</button><button class="btn small secondary" onclick="toggleDone('${r.id}')">${r.status==='Done'?'Mark to do':'Mark done'}</button><button class="btn small danger" onclick="deleteRecord('${r.id}')">Delete</button></div></article>`).join(''):'<div class="empty">No records yet. Add a note or homework above.</div>';}
+function toggleDone(id){let r=state.records.find(x=>x.id===id);if(r){r.status=r.status==='Done'?'To do':'Done';save();renderRecords();}}
+['search','filterType','filterStatus'].forEach(id=>$(id).addEventListener('input',renderRecords));
+$('eventForm').addEventListener('submit',e=>{e.preventDefault();state.events.push({id:String(Date.now()),title:$('eventTitle').value.trim(),date:$('eventDate').value,child:$('eventChild').value,details:$('eventDetails').value});save();$('eventForm').reset();renderEvents();});
+function renderEvents(){let a=[...state.events].sort((x,y)=>x.date.localeCompare(y.date));$('eventsList').innerHTML=a.length?a.map(e=>`<article class="card"><div class="item-title">${esc(e.title)}</div><div class="meta">${dateText(e.date)} · ${esc(e.child)}</div><div class="details">${esc(e.details)}</div><button class="btn small danger" style="margin-top:8px" onclick="deleteEvent('${e.id}')">Delete</button></article>`).join(''):'<div class="empty">No family dates yet.</div>';}
+function deleteEvent(id){if(confirm('Delete this family date?')){state.events=state.events.filter(e=>e.id!==id);save();renderEvents();}}
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'My School Hub',version:1,exportedAt:new Date().toISOString(),...state},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-school-hub-backup.json';a.click();URL.revokeObjectURL(a.href);$('backupStatus').textContent='Backup export started. Check your Downloads folder.';});
+$('importBtn').addEventListener('click',()=>$('importFile').click());
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!Array.isArray(x.records)||!Array.isArray(x.events))throw Error();if(!confirm('Importing replaces the current records and family dates on this phone. Continue?'))return;state={records:x.records,events:x.events};save();renderRecords();renderEvents();$('backupStatus').textContent='Backup restored.';}catch(err){$('backupStatus').textContent='Could not read this backup file.';}e.target.value='';});
+load();renderRecords();renderEvents();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
